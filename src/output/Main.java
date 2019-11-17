@@ -8,37 +8,34 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
     Scene scene1,scene2,scene3,scene4,scene5;
+    private String uName="";
 
-    public void createLoginDialog(){
-        //Main Menu
-        // Create the custom dialog.
+    public void createLoginDialog(String version){
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Login");
-        dialog.setHeaderText("Look, a Custom Login Dialog");
+        dialog.setTitle(version);
+        dialog.setHeaderText("Enter a Username and Password");
         dialog.hide();
 
-        // Set the icon (must be included in the project).
-        //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
-
-        // Set the button types.
-        ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+        ButtonType loginButtonType = new ButtonType(version, ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-        // Create the username and password labels and fields.
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -54,21 +51,17 @@ public class Main extends Application {
         grid.add(new Label("Password:"), 0, 1);
         grid.add(password, 1, 1);
 
-        // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
 
-        // Do some validation (using the Java 8 lambda syntax).
         username.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
         });
 
         dialog.getDialogPane().setContent(grid);
 
-        // Request focus on the username field by default.
         Platform.runLater(() -> username.requestFocus());
 
-        // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
                 return new Pair<>(username.getText(), password.getText());
@@ -80,9 +73,22 @@ public class Main extends Application {
 
 
         result.ifPresent(usernamePassword -> {
-            Login userLogin = new Login();
-            userLogin.checkLogin(usernamePassword.getKey(),usernamePassword.getValue());
-            System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
+            if(version.equals("Login")) {
+                Login userLogin = new Login();
+                boolean loginOkay = userLogin.checkLogin(usernamePassword.getKey(), usernamePassword.getValue());
+                if(loginOkay){
+                    uName=usernamePassword.getKey();
+                }
+
+            }
+            else if (version.equals("Register")){
+                Register userReg = new Register();
+                try {
+                    userReg.registerUser(usernamePassword.getKey(), usernamePassword.getValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 
@@ -92,17 +98,45 @@ public class Main extends Application {
         primaryStage.setTitle("Poker Game");
 
         //Label label1= new Label("This is the first scene");
+        Image btImage = new Image("output/cards-2029819_640.png",200,200,false,false);
+        Button image= new Button();
+        image.setMinSize(200,200);
+        image.setGraphic(new ImageView(btImage));
         Button button1= new Button("Play");
         button1.setOnAction(e -> primaryStage.setScene(scene2));
+
+
         Button button2= new Button("LeaderBoard");
-        button2.setOnAction(e -> primaryStage.setScene(scene3));
+        button2.setOnAction(e -> {
+            Leaderboard lb = new Leaderboard();
+            ListView listView = new ListView();
+            List<String>leaderboardList = lb.getLeaderboard(uName);
+            for(int i =0; i<leaderboardList.size();i++){
+                String [] lbItems = leaderboardList.get(i).split(",");
+                String item = lbItems[0]+"  |  "+lbItems[1];
+                listView.getItems().add(item);
+            }
+
+
+            primaryStage.setScene(scene3);
+
+        });
+
         Button button3= new Button("Exit");
         button3.setOnAction(e -> Platform.exit());
+
         Button login= new Button("Login");
-        login.setOnAction(e -> createLoginDialog());
+        login.setOnAction(e -> createLoginDialog("Login"));
+
+        Button register= new Button("Register");
+        register.setOnAction(e -> createLoginDialog("Register"));
+
         VBox layout1 = new VBox(20);
-        layout1.getChildren().addAll(button1,button2,button3,login);
-        scene1= new Scene(layout1, 400, 500);
+        layout1.setAlignment(Pos.CENTER);
+        layout1.getChildren().addAll(image,button1,button2,login,register,button3);
+        BorderPane back = new BorderPane();
+        back.setCenter(layout1);
+        scene1= new Scene(back, 400, 500);
 
         //Game Selection Menu
         //Label label2= new Label("This is the second scene");
@@ -142,11 +176,36 @@ public class Main extends Application {
 
         //Game Selection Menu
         //Label label2= new Label("This is the second scene");
-        Button button13= new Button("Back");
-        button13.setOnAction(e -> primaryStage.setScene(scene2));
+
+        HBox lbHeadings = new HBox(20);
         VBox layout5= new VBox(20);
-        layout5.getChildren().addAll(button13);
         scene3= new Scene(layout5,400,500);
+
+        button2.setOnAction(e -> {
+            Leaderboard lb = new Leaderboard();
+            ListView listView = new ListView();
+            List<String>leaderboardList = lb.getLeaderboard(uName);
+            for(int i =0; i<leaderboardList.size();i++){
+                String [] lbItems = leaderboardList.get(i).split(",");
+                String item = lbItems[1]+"  |  "+lbItems[2];
+                listView.getItems().add(item);
+            }
+            layout5.getChildren().addAll(listView);
+
+            primaryStage.setScene(scene3);
+
+        });
+
+        Label score = new Label("SCORE");
+        Label date = new Label("Date");
+        lbHeadings.getChildren().addAll(score,date);
+        Button button13= new Button("Back");
+        button13.setOnAction(e -> {
+            primaryStage.setScene(scene1);
+            layout5.getChildren().remove(1);
+        });
+        layout5.getChildren().addAll(button13,lbHeadings);
+
 
 
         primaryStage.setScene(scene1);
