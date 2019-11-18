@@ -1,4 +1,4 @@
-package output;
+package output.Registry;
 
 import javax.swing.*;
 import java.io.File;
@@ -6,8 +6,8 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class Login {
-    public Boolean checkLogin(String username, String pass){
+public class Login implements ICheckUser {
+    public Boolean checkUser(String username, String pass){
         boolean userFound = false;
         try {
             URL url = getClass().getResource("UserData.txt");
@@ -33,8 +33,8 @@ public class Login {
                         "Invalid Username / Password", "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
-
             in.close();
+
 
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,

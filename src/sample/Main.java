@@ -7,13 +7,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.FileInputStream;
 
 public class Main extends Application {
     Scene scene1,scene2,scene3,scene4,scene5;
@@ -25,6 +29,7 @@ public class Main extends Application {
 
         //Main Menu
         //Label label1= new Label("This is the first scene");
+        //Image image1 = new Image(new FileInputStream("C:\\Users\\user\\Desktop\\x.jpg"));
         Button button1= new Button("Play");
         button1.setOnAction(e -> primaryStage.setScene(scene2));
         Button button2= new Button("LeaderBoard");
@@ -34,6 +39,7 @@ public class Main extends Application {
         VBox layout1 = new VBox(20);
         layout1.getChildren().addAll(button1,button2,button3);
         scene1= new Scene(layout1, 400, 500);
+        layout1.setAlignment(Pos.CENTER);
 
         //Game Selection Menu
         //Label label2= new Label("This is the second scene");
@@ -46,6 +52,7 @@ public class Main extends Application {
         VBox layout2= new VBox(20);
         layout2.getChildren().addAll(button4,button5,button6);
         scene2= new Scene(layout2,400,500);
+        layout2.setAlignment(Pos.CENTER);
 
         //Single-player Menu
         //Label label2= new Label("This is the second scene");

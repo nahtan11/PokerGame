@@ -4,9 +4,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -18,8 +15,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import output.Game.*;
+import output.Registry.ICheckUser;
+import output.Registry.registryFactory;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +26,11 @@ public class Main extends Application {
     Scene scene1,scene2,scene3,scene4,scene5;
     private String uName="";
 
-    public void createLoginDialog(String version){
+    public void createLoginDialog(String version)throws NullPointerException{
+        registryFactory regFact = new registryFactory();
+        ICheckUser loginUser = regFact.getRegistryType("Login");
+        ICheckUser regUser = regFact.getRegistryType("Register");
+
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle(version);
         dialog.setHeaderText("Enter a Username and Password");
@@ -74,19 +77,17 @@ public class Main extends Application {
 
         result.ifPresent(usernamePassword -> {
             if(version.equals("Login")) {
-                Login userLogin = new Login();
-                boolean loginOkay = userLogin.checkLogin(usernamePassword.getKey(), usernamePassword.getValue());
+
+                boolean loginOkay = loginUser.checkUser(usernamePassword.getKey(), usernamePassword.getValue());
                 if(loginOkay){
                     uName=usernamePassword.getKey();
                 }
 
             }
             else if (version.equals("Register")){
-                Register userReg = new Register();
-                try {
-                    userReg.registerUser(usernamePassword.getKey(), usernamePassword.getValue());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                boolean registerOkay = regUser.checkUser(usernamePassword.getKey(), usernamePassword.getValue());
+                if(registerOkay){
+                    uName=usernamePassword.getKey();
                 }
             }
         });
@@ -179,9 +180,14 @@ public class Main extends Application {
 
         HBox lbHeadings = new HBox(20);
         VBox layout5= new VBox(20);
-        scene3= new Scene(layout5,400,500);
+        Button button13= new Button("Back");
+
+        Label score = new Label("SCORE");
+        Label date = new Label("Date");
+        lbHeadings.getChildren().addAll(score,date);
 
         button2.setOnAction(e -> {
+
             Leaderboard lb = new Leaderboard();
             ListView listView = new ListView();
             List<String>leaderboardList = lb.getLeaderboard(uName);
@@ -196,18 +202,70 @@ public class Main extends Application {
 
         });
 
-        Label score = new Label("SCORE");
-        Label date = new Label("Date");
-        lbHeadings.getChildren().addAll(score,date);
-        Button button13= new Button("Back");
+
         button13.setOnAction(e -> {
+            //System.out.println(layout5.getChildren().size());
+            layout5.getChildren().remove(2);
             primaryStage.setScene(scene1);
-            layout5.getChildren().remove(1);
         });
+        button7.setOnAction(e -> {
+            Context context = new Context(new Bet());
+            System.out.println("Move: " + context.doStrategy(button7.getText(), " - Bet: Make first wager"));
+
+            context = new Context(new Fold());
+            System.out.println("Move: " + context.doStrategy(button7.getText(), " - Fold: Exit current hand"));
+
+            context = new Context(new Check());
+            System.out.println("Move: " + context.doStrategy(button7.getText(), " - Check: Pass action to next player"));
+        });
+        button8.setOnAction(e -> {
+            Player bot1 = new Player("Bot1");
+            Player bot2 = new Player("Bot2");
+
+            bot1.sendMove("Check");
+            bot2.sendMove("Fold");
+            Context context = new Context(new Bet());
+            System.out.println("Move: " + context.doStrategy(button8.getText(), " - Bet: Make first wager"));
+
+            context = new Context(new Fold());
+            System.out.println("Move: " + context.doStrategy(button8.getText(), " - Fold: Exit current hand"));
+
+            context = new Context(new Check());
+            System.out.println("Move: " + context.doStrategy(button8.getText(), " - Check: Pass action to next player"));
+
+
+            ChipContainerInfo table = new ChipContainerInfo("Table",100, 10,20,10,5,10,20,10,15);
+
+            ChipContainerInfo pool = new ChipContainerInfo("pool",60,10,20,5,0,2,8,10,10);
+
+            ChipContainerInfo players = new ChipContainerInfo("players",40,2,3,6,2,2,10,15,5);
+
+            ChipContainerInfo player1 = new ChipContainerInfo("bot1",25,5,0,0,10,2,5,2,1);
+
+            ChipContainerInfo player2 = new ChipContainerInfo("bot2",15,0,0,5,1,3,2,1,3);
+
+            table.add(pool);
+            table.add(players);
+
+            players.add(player1);
+            players.add(player2);
+
+            System.out.println(table);
+
+            for (ChipContainerInfo amount : table.getSubContainers()) {
+                System.out.println(amount);
+
+                for (ChipContainerInfo subAmount : amount.getSubContainers()) {
+                    System.out.println(subAmount);
+                }
+            }
+
+
+        });
+
+
         layout5.getChildren().addAll(button13,lbHeadings);
-
-
-
+        scene3= new Scene(layout5,400,500);
         primaryStage.setScene(scene1);
         primaryStage.show();
     }

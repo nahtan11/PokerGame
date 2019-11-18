@@ -1,12 +1,15 @@
-package output;
+package output.Registry;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.util.Scanner;
 
-public class Register {
-    public void registerUser(String username, String pass)throws IOException{
+
+
+public class Register implements ICheckUser {
+    public Boolean checkUser(String username, String pass){
+        //String prevFileContents = "";
         try {
             URL url = getClass().getResource("UserData.txt");
             File file = new File(url.getPath());
@@ -16,6 +19,7 @@ public class Register {
             while (in.hasNextLine())
             {
                 String s = in.nextLine();
+                //prevFileContents=prevFileContents.concat(s + "\n");
                 String[] sArray = s.split(",");
                 System.out.println(sArray[0]);
                 if (username.equals(sArray[0]))
@@ -23,19 +27,28 @@ public class Register {
                     userFound=true;
                 }
             }
-            in.close();
             if(!userFound){
-                writeToFile("UserData.txt",username,pass);
+                in.close();
+                try {
+                    writeToFile("UserData.txt",username,pass);
+                }catch (IOException e){
+
+                }
+
                 JOptionPane.showMessageDialog(null,
                         "Registration Successful", "Success",
                         JOptionPane.INFORMATION_MESSAGE);
+                return true;
             }
             else
             {
+                in.close();
                 JOptionPane.showMessageDialog(null,
                         "Username already taken", "Error",
                         JOptionPane.ERROR_MESSAGE);
+                return false;
             }
+
 
 
 
@@ -43,16 +56,30 @@ public class Register {
             JOptionPane.showMessageDialog(null,
                     "User Database file Not Found", "Error",
                     JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 
     public void writeToFile(String fileName,String usr, String pass)throws IOException {
-        FileWriter fileWriter = new FileWriter("src//output//"+fileName, true);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.append("\n");
-        printWriter.append(usr);
-        printWriter.append(",");
-        printWriter.append(pass);
+        String text = "\n"+usr+","+pass;
+        //FileWriter fileWriter = new FileWriter("src//output//"+fileName, true);
+        //File file = new File("src//output//"+fileName);
+        FileWriter fileWriterTemp = new FileWriter("C:\\Users\\nathan\\Documents\\College\\PokerGame\\src\\output\\UserData.txt", true);
+        PrintWriter printWriter = new PrintWriter(fileWriterTemp);
+        printWriter.print("\n"+usr+","+pass);
         printWriter.close();
+
+        URL url = getClass().getResource("UserData.txt");
+        File file = new File(url.getPath());
+        System.out.println(url.getPath());
+        Scanner in = new Scanner(file);
+
+        while (in.hasNextLine())
+        {
+            String s = in.nextLine();
+            //prevFileContents=prevFileContents.concat(s + "\n");
+
+            System.out.println(s);
+        }
     }
 }
