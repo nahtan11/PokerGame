@@ -13,7 +13,7 @@ public class Leaderboard {
     public List<String> getLeaderboard(String username){
         List<String> lbList = new ArrayList<>();
         try {
-            URL url = getClass().getResource("Leaderboard.txt");
+            URL url = getClass().getResource("Database//Leaderboard.txt");
             Scanner in = new Scanner(new File(url.getPath()));
 
             while (in.hasNextLine())

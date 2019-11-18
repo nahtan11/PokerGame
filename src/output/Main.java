@@ -95,11 +95,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("FXML/sample.fxml"));
         primaryStage.setTitle("Poker Game");
 
         //Label label1= new Label("This is the first scene");
-        Image btImage = new Image("output/cards-2029819_640.png",200,200,false,false);
+        Image btImage = new Image("output/Images/cards-2029819_640.png",200,200,false,false);
         Button image= new Button();
         image.setMinSize(200,200);
         image.setGraphic(new ImageView(btImage));
