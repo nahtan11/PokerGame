@@ -1,8 +1,7 @@
 package output.Registry;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -10,8 +9,13 @@ public class Login implements ICheckUser {
     public Boolean checkUser(String username, String pass){
         boolean userFound = false;
         try {
-            URL url = getClass().getResource("UserData.txt");
-            Scanner in = new Scanner(new File(url.getPath()));
+            //URL url = getClass().getResource("UserData.txt");
+            //Scanner in = new Scanner(new File(url.getPath()));
+
+            BufferedReader file
+                    = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Registry\\UserData.txt"));
+
+            Scanner in = new Scanner(file);
 
             while (in.hasNextLine()&&!userFound)
             {

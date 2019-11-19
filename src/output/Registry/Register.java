@@ -11,9 +11,11 @@ public class Register implements ICheckUser {
     public Boolean checkUser(String username, String pass){
         //String prevFileContents = "";
         try {
-            URL url = getClass().getResource("UserData.txt");
-            File file = new File(url.getPath());
-            System.out.println(url.getPath());
+            //URL url = getClass().getResource("output\\Registry\\UserData.txt");
+            //File file = new File("output/Registry/UserData.txt");
+            BufferedReader file
+                = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Registry\\UserData.txt"));
+
             Scanner in = new Scanner(file);
             boolean userFound = false;
             while (in.hasNextLine())
@@ -30,6 +32,7 @@ public class Register implements ICheckUser {
             if(!userFound){
                 in.close();
                 try {
+                    System.out.println("hi");
                     writeToFile("UserData.txt",username,pass);
                 }catch (IOException e){
 
@@ -61,17 +64,20 @@ public class Register implements ICheckUser {
     }
 
     public void writeToFile(String fileName,String usr, String pass)throws IOException {
-        String text = "\n"+usr+","+pass;
+        String text = usr+","+pass;
         //FileWriter fileWriter = new FileWriter("src//output//"+fileName, true);
         //File file = new File("src//output//"+fileName);
-        FileWriter fileWriterTemp = new FileWriter("C:\\Users\\nathan\\Documents\\College\\PokerGame\\src\\output\\UserData.txt", true);
-        PrintWriter printWriter = new PrintWriter(fileWriterTemp);
-        printWriter.print("\n"+usr+","+pass);
-        printWriter.close();
+        BufferedWriter writer = new BufferedWriter(
+                new FileWriter("..\\PokerGame\\src\\output\\Registry\\UserData.txt", true)  //Set true for append mode
+        );
+        writer.newLine();   //Add new line
+        writer.write(text);
+        writer.flush();
+        writer.close();
 
-        URL url = getClass().getResource("UserData.txt");
-        File file = new File(url.getPath());
-        System.out.println(url.getPath());
+        BufferedReader file
+                = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Registry\\UserData.txt"));
+
         Scanner in = new Scanner(file);
 
         while (in.hasNextLine())

@@ -1,5 +1,6 @@
 package output.Game;
 
+//Mediator Design Pattern
 public class Player {
     private String name;
 

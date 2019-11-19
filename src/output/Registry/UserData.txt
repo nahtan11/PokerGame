@@ -1,7 +1,6 @@
 Admin,pass
 Jane,doe
 jim,glass
-John,pass
 Jimmy,pass
 billy,boy
 test,test
@@ -19,9 +18,14 @@ harry,harry
 txt,txt
 hi,hi
 hell,hell
-John,pass
-John,pass
 timmy,pass
 sim,sim
 tum,tum
 Neil,pass
+veep,veep
+hat,hat
+seb,seb
+testing,testing
+ten,ten
+newuser,newuser
+John,pass

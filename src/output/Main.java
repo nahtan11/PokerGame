@@ -88,6 +88,7 @@ public class Main extends Application {
                 boolean registerOkay = regUser.checkUser(usernamePassword.getKey(), usernamePassword.getValue());
                 if(registerOkay){
                     uName=usernamePassword.getKey();
+                    boolean loginOkay = loginUser.checkUser(usernamePassword.getKey(), usernamePassword.getValue());
                 }
             }
         });
@@ -219,6 +220,9 @@ public class Main extends Application {
             System.out.println("Move: " + context.doStrategy(button7.getText(), " - Check: Pass action to next player"));
         });
         button8.setOnAction(e -> {
+
+            Encryption en = new Encryption();
+            en.encrypt();
             Player bot1 = new Player("Bot1");
             Player bot2 = new Player("Bot2");
 
