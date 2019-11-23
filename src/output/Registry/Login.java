@@ -3,10 +3,11 @@ package output.Registry;
 import javax.swing.*;
 import java.io.*;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Login implements ICheckUser {
-    public Boolean checkUser(String username, String pass){
+    public Boolean checkUser(String username, byte [] pass){
         boolean userFound = false;
         try {
             //URL url = getClass().getResource("UserData.txt");
@@ -20,10 +21,10 @@ public class Login implements ICheckUser {
             while (in.hasNextLine()&&!userFound)
             {
                 String s = in.nextLine();
-                String[] sArray = s.split(",");
+                String[] sArray = s.split(",",2);
                 System.out.println(sArray[0]+" "+sArray[1]);
 
-                if (username.equals(sArray[0]) && pass.equals(sArray[1]))
+                if (username.equals(sArray[0]) && Arrays.toString(pass).equals(sArray[1]))
                 {
                     userFound=true;
                     JOptionPane.showMessageDialog(null,

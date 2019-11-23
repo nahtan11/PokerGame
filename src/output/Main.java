@@ -19,6 +19,9 @@ import output.Game.*;
 import output.Registry.ICheckUser;
 import output.Registry.registryFactory;
 
+import java.nio.channels.ClosedByInterruptException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,18 +80,32 @@ public class Main extends Application {
 
         result.ifPresent(usernamePassword -> {
             if(version.equals("Login")) {
+                Encryption newHash = new Encryption();
+                byte [] hashArray = new byte[16];
+                try {
+                    hashArray = newHash.produceHash(usernamePassword.getValue(),new byte[16]);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
 
-                boolean loginOkay = loginUser.checkUser(usernamePassword.getKey(), usernamePassword.getValue());
+                boolean loginOkay = loginUser.checkUser(usernamePassword.getKey(), hashArray);
                 if(loginOkay){
                     uName=usernamePassword.getKey();
                 }
 
             }
             else if (version.equals("Register")){
-                boolean registerOkay = regUser.checkUser(usernamePassword.getKey(), usernamePassword.getValue());
+                Encryption newHash = new Encryption();
+                byte [] hashArray = new byte[16];
+                try {
+                    hashArray = newHash.produceHash(usernamePassword.getValue(),new byte[16]);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                boolean registerOkay = regUser.checkUser(usernamePassword.getKey(), hashArray);
                 if(registerOkay){
                     uName=usernamePassword.getKey();
-                    boolean loginOkay = loginUser.checkUser(usernamePassword.getKey(), usernamePassword.getValue());
+                    boolean loginOkay = loginUser.checkUser(usernamePassword.getKey(), hashArray);
                 }
             }
         });
@@ -220,9 +237,6 @@ public class Main extends Application {
             System.out.println("Move: " + context.doStrategy(button7.getText(), " - Check: Pass action to next player"));
         });
         button8.setOnAction(e -> {
-
-            Encryption en = new Encryption();
-            en.encrypt();
             Player bot1 = new Player("Bot1");
             Player bot2 = new Player("Bot2");
 

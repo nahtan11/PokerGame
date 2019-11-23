@@ -3,12 +3,13 @@ package output.Registry;
 import javax.swing.*;
 import java.io.*;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
 
 public class Register implements ICheckUser {
-    public Boolean checkUser(String username, String pass){
+    public Boolean checkUser(String username, byte [] pass){
         //String prevFileContents = "";
         try {
             //URL url = getClass().getResource("output\\Registry\\UserData.txt");
@@ -22,7 +23,7 @@ public class Register implements ICheckUser {
             {
                 String s = in.nextLine();
                 //prevFileContents=prevFileContents.concat(s + "\n");
-                String[] sArray = s.split(",");
+                String[] sArray = s.split(",",2);
                 System.out.println(sArray[0]);
                 if (username.equals(sArray[0]))
                 {
@@ -63,8 +64,8 @@ public class Register implements ICheckUser {
         }
     }
 
-    public void writeToFile(String fileName,String usr, String pass)throws IOException {
-        String text = usr+","+pass;
+    public void writeToFile(String fileName,String usr, byte[] pass)throws IOException {
+        String text = usr+","+ Arrays.toString(pass);
         //FileWriter fileWriter = new FileWriter("src//output//"+fileName, true);
         //File file = new File("src//output//"+fileName);
         BufferedWriter writer = new BufferedWriter(
