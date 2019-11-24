@@ -1,4 +1,4 @@
-package output;
+package output.Registry;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

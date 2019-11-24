@@ -1,4 +1,4 @@
-package output;
+package output.Main;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -14,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import output.Game.*;
+import output.Leaderboard.Leaderboard;
+import output.Registry.Encryption;
 import output.Registry.ICheckUser;
 import output.Registry.registryFactory;
 
@@ -230,6 +232,7 @@ public class Main extends Application {
             dispatcher.preEvent(context);
 
 
+
         });
         button8.setOnAction(e -> {
             /*Player bot1 = new Player("Bot1");
@@ -276,6 +279,12 @@ public class Main extends Application {
             EventLoggingDispatcher dispatcher = new EventLoggingDispatcher();
             dispatcher.addEventLogInterceptors(new GameEventInterceptor());
             dispatcher.preEvent(context);
+            fiveCard newGame = new fiveCard();
+            try {
+                newGame.PlayGame(primaryStage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
         });
 
