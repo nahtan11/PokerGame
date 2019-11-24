@@ -6,16 +6,11 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Scanner;
 
-
-
 public class Register implements ICheckUser {
     public Boolean checkUser(String username, byte [] pass){
-        //String prevFileContents = "";
         try {
-            //URL url = getClass().getResource("output\\Registry\\UserData.txt");
-            //File file = new File("output/Registry/UserData.txt");
             BufferedReader file
-                = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Registry\\UserData.txt"));
+                = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\UserData.txt"));
 
             Scanner in = new Scanner(file);
             boolean userFound = false;
@@ -53,9 +48,6 @@ public class Register implements ICheckUser {
                 return false;
             }
 
-
-
-
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,
                     "User Database file Not Found", "Error",
@@ -66,10 +58,8 @@ public class Register implements ICheckUser {
 
     public void writeToFile(String fileName,String usr, byte[] pass)throws IOException {
         String text = usr+","+ Arrays.toString(pass);
-        //FileWriter fileWriter = new FileWriter("src//output//"+fileName, true);
-        //File file = new File("src//output//"+fileName);
         BufferedWriter writer = new BufferedWriter(
-                new FileWriter("..\\PokerGame\\src\\output\\Registry\\UserData.txt", true)  //Set true for append mode
+                new FileWriter("..\\PokerGame\\src\\output\\Database\\UserData.txt", true)  //Set true for append mode
         );
         writer.newLine();   //Add new line
         writer.write(text);
@@ -77,7 +67,7 @@ public class Register implements ICheckUser {
         writer.close();
 
         BufferedReader file
-                = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Registry\\UserData.txt"));
+                = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\UserData.txt"));
 
         Scanner in = new Scanner(file);
 

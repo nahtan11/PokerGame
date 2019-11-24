@@ -10,11 +10,8 @@ public class Login implements ICheckUser {
     public Boolean checkUser(String username, byte [] pass){
         boolean userFound = false;
         try {
-            //URL url = getClass().getResource("UserData.txt");
-            //Scanner in = new Scanner(new File(url.getPath()));
-
             BufferedReader file
-                    = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Registry\\UserData.txt"));
+                    = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\UserData.txt"));
 
             Scanner in = new Scanner(file);
 
@@ -40,7 +37,6 @@ public class Login implements ICheckUser {
             }
             in.close();
 
-
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,
                     "User Database file Not Found", "Error",
@@ -48,5 +44,4 @@ public class Login implements ICheckUser {
         }
         return userFound;
     }
-
 }

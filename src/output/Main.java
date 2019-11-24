@@ -2,12 +2,10 @@ package output;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -19,9 +17,9 @@ import output.Game.*;
 import output.Registry.ICheckUser;
 import output.Registry.registryFactory;
 
-import java.nio.channels.ClosedByInterruptException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -113,10 +111,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("FXML/sample.fxml"));
         primaryStage.setTitle("Poker Game");
 
-        //Label label1= new Label("This is the first scene");
+
         Image btImage = new Image("output/Images/cards-2029819_640.png",200,200,false,false);
         Button image= new Button();
         image.setMinSize(200,200);
@@ -143,10 +140,8 @@ public class Main extends Application {
 
         Button button3= new Button("Exit");
         button3.setOnAction(e -> Platform.exit());
-
         Button login= new Button("Login");
         login.setOnAction(e -> createLoginDialog("Login"));
-
         Button register= new Button("Register");
         register.setOnAction(e -> createLoginDialog("Register"));
 
@@ -158,7 +153,6 @@ public class Main extends Application {
         scene1= new Scene(back, 400, 500);
 
         //Game Selection Menu
-        //Label label2= new Label("This is the second scene");
         Button button4= new Button("Single-player");
         button4.setOnAction(e -> primaryStage.setScene(scene4));
         Button button5= new Button("Multi-player");
@@ -172,9 +166,7 @@ public class Main extends Application {
         //Single-player Menu
         //Label label2= new Label("This is the second scene");
         Button button7= new Button("Texas Hold'em");
-        //button2.setOnAction(e -> primaryStage.setScene(scene1));
         Button button8= new Button("5 Card Draw");
-        //button2.setOnAction(e -> primaryStage.setScene(scene1));
         Button button9= new Button("Back");
         button9.setOnAction(e -> primaryStage.setScene(scene2));
         VBox layout3= new VBox(20);
@@ -184,17 +176,13 @@ public class Main extends Application {
         //Multi-player Menu
         //Label label2= new Label("This is the second scene");
         Button button10= new Button("Texas Hold'em");
-        //button2.setOnAction(e -> primaryStage.setScene(scene1));
         Button button11= new Button("5 Card Draw");
-        //button2.setOnAction(e -> primaryStage.setScene(scene1));
         Button button12= new Button("Back");
         button12.setOnAction(e -> primaryStage.setScene(scene2));
         VBox layout4= new VBox(20);
         layout4.getChildren().addAll(button10,button11,button12);
         scene5= new Scene(layout4,400,500);
 
-        //Game Selection Menu
-        //Label label2= new Label("This is the second scene");
 
         HBox lbHeadings = new HBox(20);
         VBox layout5= new VBox(20);
@@ -227,17 +215,24 @@ public class Main extends Application {
             primaryStage.setScene(scene1);
         });
         button7.setOnAction(e -> {
-            Context context = new Context(new Bet());
-            System.out.println("Move: " + context.doStrategy(button7.getText(), " - Bet: Make first wager"));
+            //Context context = new Context(new Bet());
+            //System.out.println("Move: " + context.doStrategy(button7.getText(), " - Bet: Make first wager"));
 
-            context = new Context(new Fold());
-            System.out.println("Move: " + context.doStrategy(button7.getText(), " - Fold: Exit current hand"));
+            //context = new Context(new Fold());
+            //System.out.println("Move: " + context.doStrategy(button7.getText(), " - Fold: Exit current hand"));
 
-            context = new Context(new Check());
-            System.out.println("Move: " + context.doStrategy(button7.getText(), " - Check: Pass action to next player"));
+            //context = new Context(new Check());
+            //System.out.println("Move: " + context.doStrategy(button7.getText(), " - Check: Pass action to next player"));
+
+            EventContextObj context = new EventContextObj(LocalDateTime.now(),uName,button7.getText());
+            EventLoggingDispatcher dispatcher = new EventLoggingDispatcher();
+            dispatcher.addEventLogInterceptors(new GameEventInterceptor());
+            dispatcher.preEvent(context);
+
+
         });
         button8.setOnAction(e -> {
-            Player bot1 = new Player("Bot1");
+            /*Player bot1 = new Player("Bot1");
             Player bot2 = new Player("Bot2");
 
             bot1.sendMove("Check");
@@ -276,8 +271,11 @@ public class Main extends Application {
                 for (ChipContainerInfo subAmount : amount.getSubContainers()) {
                     System.out.println(subAmount);
                 }
-            }
-
+            }*/
+            EventContextObj context = new EventContextObj(LocalDateTime.now(),uName,button8.getText());
+            EventLoggingDispatcher dispatcher = new EventLoggingDispatcher();
+            dispatcher.addEventLogInterceptors(new GameEventInterceptor());
+            dispatcher.preEvent(context);
 
         });
 
