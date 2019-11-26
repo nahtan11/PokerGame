@@ -2,7 +2,7 @@ package output.Game;
 
 import java.util.*;
 
-public class deckThings 
+public class deckThings
 {
 	public static ArrayList<String> makeDeck()
 	{

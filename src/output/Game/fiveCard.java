@@ -19,7 +19,66 @@ import javafx.util.Duration;
 import javafx.event.ActionEvent; 
 import javafx.event.EventHandler; 
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
  
+interface Command 
+{ 
+    public void execute(); 
+}
+
+class Colour {
+	public void on()
+	{
+		System.out.println("Colour is red");
+	}
+	public void off()
+	{
+		System.out.println("Colour is black");
+	}
+}
+
+class ColourOnCommand implements Command {
+	Colour colour;
+	public ColourOnCommand(Colour colour)
+	{
+		this.colour = colour;
+	}
+	public void execute()
+	{
+		colour.on();
+	}
+}
+
+class ColourOffCommand implements Command {
+	Colour colour;
+	public ColourOffCommand(Colour colour)
+	{
+		this.colour = colour;
+	}
+	public void execute()
+	{
+		colour.off();
+	}
+}
+
+class SimpleRemoteControl 
+{ 
+    Command slot;
+  
+    public SimpleRemoteControl() 
+    { 
+    } 
+  
+    public void setCommand(Command command) 
+    { 
+        slot = command; 
+    } 
+  
+    public void buttonWasPressed() 
+    { 
+        slot.execute(); 
+    } 
+} 
 
 public class fiveCard {
 	Scene scene1;
@@ -80,6 +139,15 @@ public class fiveCard {
 	static int howManyCards;
 	static boolean betting;
 	
+	public static void colourController() 
+    { 
+        SimpleRemoteControl remote = 
+                  new SimpleRemoteControl(); 
+        Colour colour = new Colour();  
+  
+        remote.setCommand(new ColourOnCommand(colour)); 
+        remote.buttonWasPressed();  
+    }
 
     public void PlayGame(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Five Card Draw");
@@ -303,6 +371,10 @@ public class fiveCard {
 	
 	public static void endGame()
 	{	
+		player2.setTextFill(Color.web("#000000"));
+		player3.setTextFill(Color.web("#000000"));
+		player4.setTextFill(Color.web("#000000"));
+		
 		betButton.setDisable(true);
 		checkButton.setDisable(true);
 		callButton.setDisable(true);
@@ -608,6 +680,10 @@ public class fiveCard {
 	
 	public static void deal()
 	{
+		player2.setTextFill(Color.web("#000000"));
+		player3.setTextFill(Color.web("#000000"));
+		player4.setTextFill(Color.web("#000000"));
+				
 		raiseButton.setDisable(true);
 		betButton.setDisable(true);
 		callButton.setDisable(true);
@@ -705,6 +781,9 @@ public class fiveCard {
 				if (player3Fold)
 					loopedOnce = true;
 				
+				player2.setTextFill(Color.web("#000000"));
+				player3.setTextFill(Color.web("#000000"));
+				player4.setTextFill(Color.web("#000000"));
 				money = variables.getMoney();
 				if (money >= yourDebt)
 				{
@@ -957,12 +1036,37 @@ public class fiveCard {
 		if (whosTurn == 4 && player4Fold == true)
 			whosTurn = 1;
 		
+		if(whosTurn == 2)
+		{
+			player2.setTextFill(Color.web("#ff0000"));
+			player3.setTextFill(Color.web("#000000"));
+			player4.setTextFill(Color.web("#000000"));
+			colourController();
+		}
+		else if(whosTurn == 3)
+		{
+			player3.setTextFill(Color.web("#ff0000"));
+			player2.setTextFill(Color.web("#000000"));
+			player4.setTextFill(Color.web("#000000"));
+			colourController();
+		}
+		else if(whosTurn == 4)
+		{
+			player4.setTextFill(Color.web("#ff0000"));
+			player3.setTextFill(Color.web("#000000"));
+			player2.setTextFill(Color.web("#000000"));
+			colourController();
+		}
+		
 		if (whosTurn == 1)
 		{
 			if (loopedOnce == true)
 				checkForDeal();
 			else
 			{
+				player2.setTextFill(Color.web("#000000"));
+				player3.setTextFill(Color.web("#000000"));
+				player4.setTextFill(Color.web("#000000"));
 				yourDebt = variables.getYourDebt();
 				money = variables.getMoney();
 				if (money >= yourDebt)

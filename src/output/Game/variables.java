@@ -137,4 +137,5 @@ public class variables
 	{
 		return lastBet;
 	}
+	
 }
