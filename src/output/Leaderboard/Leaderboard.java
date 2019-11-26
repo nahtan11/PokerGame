@@ -1,4 +1,4 @@
-ackage output.Leaderboard;
+package output.Leaderboard;
 
 import javax.swing.*;
 import java.io.BufferedReader;
