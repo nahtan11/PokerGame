@@ -1,4 +1,4 @@
-package output.Leaderboard;
+ackage output.Leaderboard;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -11,9 +11,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class Leaderboard {
-    public List<String> getLeaderboard(String username){
-        List<String> lbList = new ArrayList<>();
+public class Leaderboard implements Cloneable{
+	private List<String> lbList;
+	
+	public Leaderboard(){
+		lbList = new ArrayList<String>();
+	}
+	
+	public Leaderboard(List<String> list){
+		this.lbList = list;
+	}
+	
+    public void setLeaderboard(String username){
         try {
             BufferedReader file
                     = new BufferedReader(new FileReader("output\\Database\\Leaderboard.txt"));
@@ -27,11 +36,11 @@ public class Leaderboard {
 
 
 
-                /*if (username.equals(sArray[0]))
+                if (username.equals(sArray[0]))
                 {
                     lbList.add(s);
                     System.out.println(sArray[1]+" "+sArray[2]);
-                }*/
+                }
 
             }
 
@@ -42,6 +51,18 @@ public class Leaderboard {
                     "User Database file Not Found", "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+	}
+	
+	public List<String> getLeaderboard(){
         return lbList;
     }
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException{
+			List<String> temp = new ArrayList<String>();
+			for(String s : this.getLeaderboard()){
+				temp.add(s);
+			}
+			return new Leaderboard(temp);
+	}
 }
