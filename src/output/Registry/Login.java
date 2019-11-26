@@ -11,7 +11,7 @@ public class Login implements ICheckUser {
         boolean userFound = false;
         try {
             BufferedReader file
-                    = new BufferedReader(new FileReader("output\\Database\\UserData.txt"));
+                    = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\UserData.txt"));
 
             Scanner in = new Scanner(file);
 

@@ -129,7 +129,7 @@ public class Main extends Application {
         button2.setOnAction(e -> {
             Leaderboard lb = new Leaderboard();
             ListView listView = new ListView();
-            List<String>leaderboardList = lb.getLeaderboard(uName);
+            List<String>leaderboardList = lb.getLeaderboard();
             for(int i =0; i<leaderboardList.size();i++){
                 String [] lbItems = leaderboardList.get(i).split(",");
                 String item = lbItems[0]+"  |  "+lbItems[1];
@@ -199,7 +199,8 @@ public class Main extends Application {
 
             Leaderboard lb = new Leaderboard();
             ListView listView = new ListView();
-            List<String>leaderboardList = lb.getLeaderboard(uName);
+            lb.setLeaderboard(uName);
+            List<String>leaderboardList = lb.getLeaderboard();
             for(int i =0; i<leaderboardList.size();i++){
                 String [] lbItems = leaderboardList.get(i).split(",");
                 String item = lbItems[1]+"  |  "+lbItems[2];

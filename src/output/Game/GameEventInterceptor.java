@@ -12,14 +12,14 @@ public class GameEventInterceptor implements  IEventInterceptor {
         try {
             String text = context.getUser()+" started a game of "+context.getGameName()+ " on "+context.getCurrentDateTime();
             BufferedWriter writer = new BufferedWriter(
-                    new FileWriter("output\\Database\\Logs.txt", true)  //Set true for append mode
+                    new FileWriter("..\\PokerGame\\src\\output\\Database\\Logs.txt", true)  //Set true for append mode
             );
             writer.newLine();   //Add new line
             writer.write(text);
             writer.flush();
             writer.close();
 
-            file = new BufferedReader(new FileReader("output\\Database\\Logs.txt"));
+            file = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\Logs.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,14 +36,14 @@ public class GameEventInterceptor implements  IEventInterceptor {
         try {
             String text = context.getUser()+" ended a game of "+context.getGameName()+ " on "+context.getCurrentDateTime();
             BufferedWriter writer = new BufferedWriter(
-                    new FileWriter("output\\Database\\Logs.txt", true)  //Set true for append mode
+                    new FileWriter("..\\PokerGame\\src\\output\\Database\\Logs.txt", true)  //Set true for append mode
             );
             writer.newLine();   //Add new line
             writer.write(text);
             writer.flush();
             writer.close();
 
-            file = new BufferedReader(new FileReader("output\\Database\\Logs.txt"));
+            file = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\Logs.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }

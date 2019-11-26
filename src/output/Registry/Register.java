@@ -10,7 +10,7 @@ public class Register implements ICheckUser {
     public Boolean checkUser(String username, byte [] pass){
         try {
             BufferedReader file
-                = new BufferedReader(new FileReader("output\\Database\\UserData.txt"));
+                = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\UserData.txt"));
 
             Scanner in = new Scanner(file);
             boolean userFound = false;
@@ -59,7 +59,7 @@ public class Register implements ICheckUser {
     public void writeToFile(String fileName,String usr, byte[] pass)throws IOException {
         String text = usr+","+ Arrays.toString(pass);
         BufferedWriter writer = new BufferedWriter(
-                new FileWriter("output\\Database\\UserData.txt", true)  //Set true for append mode
+                new FileWriter("..\\PokerGame\\src\\output\\Database\\UserData.txt", true)  //Set true for append mode
         );
         writer.newLine();   //Add new line
         writer.write(text);
@@ -67,7 +67,7 @@ public class Register implements ICheckUser {
         writer.close();
 
         BufferedReader file
-                = new BufferedReader(new FileReader("output\\Database\\UserData.txt"));
+                = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\UserData.txt"));
 
         Scanner in = new Scanner(file);
 
