@@ -64,7 +64,7 @@ public class playerDecisions
 			money = variables.getMoney();
 			money = money - yourBetInt;
 			variables.setMoney(money);
-			if (yourBetInt > 0 && yourBetInt < 50)
+			if (yourBetInt > -1 && yourBetInt < 50)
 				lastBet = "low";
 			else if (yourBetInt > 49 && yourBetInt < 100)
 				lastBet = "medium";

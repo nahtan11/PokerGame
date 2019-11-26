@@ -16,7 +16,7 @@ public class Leaderboard {
         List<String> lbList = new ArrayList<>();
         try {
             BufferedReader file
-                    = new BufferedReader(new FileReader("..\\PokerGame\\src\\output\\Database\\Leaderboard.txt"));
+                    = new BufferedReader(new FileReader("output\\Database\\Leaderboard.txt"));
 
             Scanner in = new Scanner(file);
 
