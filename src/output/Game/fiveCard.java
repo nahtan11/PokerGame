@@ -19,10 +19,184 @@ import javafx.util.Duration;
 import javafx.event.ActionEvent; 
 import javafx.event.EventHandler; 
 import javafx.scene.control.TextField;
- 
 
+//Adapter
+interface CheckEvent
+{
+	public String setCheck();
+}
+
+class Check implements CheckEvent
+{
+	public String setCheck()
+	{
+		return "\nPlayer checks.";
+	}
+}
+
+interface CallEvent
+{
+	public String setCall();
+}
+
+class Call implements CallEvent
+{
+	public String setCall()
+	{
+		return "\nPlayer calls";
+	}
+}
+
+class CheckAdapter implements CallEvent
+{
+	CheckEvent checkevent;
+	public CheckAdapter(CheckEvent checkevent)
+	{
+		this.checkevent = checkevent;
+	}
+	
+	public String setCall()
+	{
+		return checkevent.setCheck();
+	}
+}
+
+//Bridge
+abstract class Dealer 
+{
+	protected Deal deal1;
+	protected Deal deal2;
+	
+	protected Dealer(Deal deal1, Deal deal2)
+	{
+		this.deal1 = deal1;
+		this.deal2 = deal2;
+	}
+	
+	abstract public void swapWithDealer(Label prompt, int num);
+}
+
+class Player2Deal extends Dealer
+{
+	public Player2Deal(Deal deal1, Deal deal2)
+	{
+		super(deal1, deal2);
+	}
+	
+	@Override
+	public void swapWithDealer(Label prompt, int num)
+	{
+		prompt.setText(prompt.getText() + "\nPlayer 2 swapped ");
+		deal1.add(prompt, num);
+		deal2.add(prompt, num);
+	}
+}
+
+class Player3Deal extends Dealer
+{
+	public Player3Deal(Deal deal1, Deal deal2)
+	{
+		super(deal1, deal2);
+	}
+	
+	@Override
+	public void swapWithDealer(Label prompt, int num)
+	{
+		prompt.setText(prompt.getText() + "\nPlayer 3 swapped ");
+		deal1.add(prompt, num);
+		deal2.add(prompt, num);
+	}
+}
+
+class Player4Deal extends Dealer
+{
+	public Player4Deal(Deal deal1, Deal deal2)
+	{
+		super(deal1, deal2);
+	}
+	
+	@Override
+	public void swapWithDealer(Label prompt, int num)
+	{
+		prompt.setText(prompt.getText() + "\nPlayer 4 swapped ");
+		deal1.add(prompt, num);
+		deal2.add(prompt, num);
+	}
+}
+ 
+ interface Deal
+ {
+	 abstract public void add(Label prompt, int num);
+ }
+
+ class CardsSwapped implements Deal
+ {
+	 @Override
+	 public void add(Label prompt, int num)
+	 {
+		 prompt.setText(prompt.getText() + num);
+	 }
+ }
+ 
+ class CardAmount implements Deal
+ {
+	 @Override
+	 public void add(Label prompt, int num)
+	 {
+		 if (num > 1)
+			prompt.setText(prompt.getText() + " cards.");
+		 else
+			prompt.setText(prompt.getText() + " card.");
+	 }
+ }
+ 
+ //Memento
+ class Reset
+ {
+	private boolean[] state;
+	 
+	public void set(boolean[] state)
+	{
+		this.state = state;
+	}
+	
+	public Memento saveToMemento()
+	{
+		return new Memento(state);
+	}
+	
+	public void restoreFromMemento(Memento memento, Button[] pickButtons, ArrayList<Integer> clearList)
+	{
+		clearList.clear();
+		state = memento.getSavedState();
+		for (int i = 0; i < state.length; i++)
+		{
+			if (state[i] == false)
+				pickButtons[i].setDisable(false);
+			else
+				pickButtons[i].setDisable(true);
+		}
+	}
+	
+	public static class Memento
+	{
+		private final boolean[] state;
+		
+		public Memento(boolean[] stateToSave)
+		{
+			state = stateToSave;
+		}
+		
+		public boolean[] getSavedState()
+		{
+			return state;
+		}
+	}
+ }
+ 
 public class fiveCard {
 	Scene scene1;
+	Scene previousScene;
 	static Label prompt;
 	static Label potLabel;
 	static Label yourMoney;
@@ -79,11 +253,12 @@ public class fiveCard {
 	static boolean loopedOnce;
 	static int howManyCards;
 	static boolean betting;
-	
+	static Button[] pickButtons;
 
-    public void PlayGame(Stage primaryStage) throws Exception{
+    public void PlayGame(Stage primaryStage, Scene ps) throws Exception{
         primaryStage.setTitle("Five Card Draw");
 
+		previousScene = ps;
 		howManyCards = 5;
 		whosTurn = 1;
 		lastBet = "none";
@@ -112,7 +287,6 @@ public class fiveCard {
 		variables.setRaiseButton(raiseButton);
 		variables.setFoldButton(foldButton);
 		
-        foldButton.setOnAction(e -> Platform.exit());
 		betButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				if (betting == false)
@@ -179,6 +353,8 @@ public class fiveCard {
 				checkForDeal();
 			}
 		});
+		
+		foldButton.setOnAction(e -> primaryStage.setScene(previousScene));
 		
 		BorderPane display = new BorderPane();
 		BorderPane border1 = new BorderPane();
@@ -307,7 +483,6 @@ public class fiveCard {
 		checkButton.setDisable(true);
 		callButton.setDisable(true);
 		raiseButton.setDisable(true);
-		foldButton.setDisable(true);
 		formatHand(player2Hand);
 		formatHand(player3Hand);
 		formatHand(player4Hand);
@@ -358,6 +533,38 @@ public class fiveCard {
 		}
 		else
 		{
+			for (int i = 3; i > -1;)
+			{
+				System.out.println("i = " + i);
+				if (allValues[i] == yourValue)
+				{
+					thisText = "You win!";
+					money = variables.getMoney();
+					potMoney = variables.getPotMoney();
+					money += potMoney;
+					potLabel.setText("Pot:\n$0");
+					yourMoney.setText("Money = $" + money);
+					i = -1;
+				}
+				else if (allValues[i] == player2Value && player2Fold == false)
+				{
+					thisText = "Player 2 wins!";
+					i = -1;
+				}
+				else if (allValues[i] == player3Value && player3Fold == false)
+				{
+					thisText = "Player 3 wins!";
+					i = -1;
+				}
+				else if (allValues[i] == player4Value && player4Fold == false)
+				{
+					thisText = "Player 4 wins!";
+					i = -1;
+				}
+				else
+					i--;
+			}
+			/*
 			if (allValues[3] == yourValue)
 			{
 				thisText = "You win!";
@@ -373,11 +580,14 @@ public class fiveCard {
 				thisText = "Player 3 wins!";
 			else if (allValues[3] == player4Value)
 				thisText = "Player 4 wins!";
+			*/
 		}
 		
 		prompt.setText(prompt.getText() + "\n" + thisText);
 		variables.setPrompt(prompt);
 		
+		foldButton.setDisable(false);
+		foldButton.setText("Back");
 	}
 	
 	public static void scrollToBottom()
@@ -385,10 +595,13 @@ public class fiveCard {
 		sp.vvalueProperty().bind(content.heightProperty());
 	}
 	
-	public static void pickCardEvent(Button cardButton, int cardNumber, ArrayList<Integer> cardList)
+	public static void pickCardEvent(Button cardButton, int cardNumber, ArrayList<Integer> cardList, Button undoButton, boolean[] buttonsPressed, List<Reset.Memento> savedStates, Reset reset)
 	{
 		cardButton.setDisable(true);
 		cardList.add(cardNumber);
+		undoButton.setDisable(false);
+		reset.set(buttonsPressed);
+		savedStates.add(reset.saveToMemento());
 	}
 	
 	public static void formatHand(String[] hand)
@@ -521,7 +734,9 @@ public class fiveCard {
 		Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(3), ev -> {
 			if (player2Fold == false)
 			{
-				prompt.setText(prompt.getText() + "\nPlayer 2 swapped " + player2Remove.length + " card(s).");
+				Dealer dealWithPlayer = new Player2Deal(new CardsSwapped(), new CardAmount());
+				dealWithPlayer.swapWithDealer(prompt, player2Remove.length);
+				//prompt.setText(prompt.getText() + "\nPlayer 2 swapped " + player2Remove.length + " card(s).");
 				variables.setPrompt(prompt);
 			}
 		}));
@@ -530,7 +745,9 @@ public class fiveCard {
 		Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(time-3), ev -> {
 			if (player3Fold == false)
 			{	
-				prompt.setText(prompt.getText() + "\nPlayer 3 swapped " + player3Remove.length + " card(s).");
+				Dealer dealWithPlayer = new Player3Deal(new CardsSwapped(), new CardAmount());
+				dealWithPlayer.swapWithDealer(prompt, player3Remove.length);
+				//prompt.setText(prompt.getText() + "\nPlayer 3 swapped " + player3Remove.length + " card(s).");
 				variables.setPrompt(prompt);
 			}
 		}));
@@ -539,7 +756,9 @@ public class fiveCard {
 		Timeline timeline3 = new Timeline(new KeyFrame(Duration.seconds(time), ev -> {
 			if (player4Fold == false)
 			{
-				prompt.setText(prompt.getText() + "\nPlayer 4 swapped " + player4Remove.length + " card(s).");
+				Dealer dealWithPlayer = new Player4Deal(new CardsSwapped(), new CardAmount());
+				dealWithPlayer.swapWithDealer(prompt, player4Remove.length);
+				//prompt.setText(prompt.getText() + "\nPlayer 4 swapped " + player4Remove.length + " card(s).");
 				variables.setPrompt(prompt);
 			}
 			
@@ -559,7 +778,7 @@ public class fiveCard {
 		timeline3.play();
 	}
 	
-	public static void finishedCardPick(ArrayList<Integer> cardList, Button button1, Button button2, Button button3, Button button4, Button button5, Button button6)
+	public static void finishedCardPick(ArrayList<Integer> cardList, Button button1, Button button2, Button button3, Button button4, Button button5, Button button6, Button button7)
 	{
 		pane.getChildren().remove(button1);
 		pane.getChildren().remove(button2);
@@ -567,7 +786,11 @@ public class fiveCard {
 		pane.getChildren().remove(button4);
 		pane.getChildren().remove(button5);
 		pane.getChildren().remove(button6);
-		prompt.setText(prompt.getText() + "\nYou swapped " + cardList.size() + " card(s).");
+		pane.getChildren().remove(button7);
+		if (cardList.size() > 1)
+			prompt.setText(prompt.getText() + "\nYou swapped " + cardList.size() + " cards.");
+		else
+			prompt.setText(prompt.getText() + "\nYou swapped " + cardList.size() + " card.");
 		variables.setPrompt(prompt);
 		for (int i = 0; i < cardList.size(); i++)
 		{
@@ -620,15 +843,26 @@ public class fiveCard {
 		Button pickCard3 = new Button();
 		Button pickCard4 = new Button();
 		Button pickCard5 = new Button();
+		Button undoButton = new Button("Undo");
+		undoButton.setDisable(true);
+		
+		pickButtons = new Button[]{pickCard1, pickCard2, pickCard3, pickCard4, pickCard5};
+		
+		boolean[] buttonsPressed = {false, false, false, false, false};
+		List<Reset.Memento> savedStates = new ArrayList<Reset.Memento>();
+		Reset reset = new Reset();
+		reset.set(buttonsPressed);
+		savedStates.add(reset.saveToMemento());
 		
 		ArrayList<Integer> arrlist = new ArrayList<Integer>(5);
 		
-		pickCard1.setOnAction(e -> pickCardEvent(pickCard1, 1, arrlist));
-		pickCard2.setOnAction(e -> pickCardEvent(pickCard2, 2, arrlist));
-		pickCard3.setOnAction(e -> pickCardEvent(pickCard3, 3, arrlist));
-		pickCard4.setOnAction(e -> pickCardEvent(pickCard4, 4, arrlist));
-		pickCard5.setOnAction(e -> pickCardEvent(pickCard5, 5, arrlist));
-		doneButton.setOnAction(e -> finishedCardPick(arrlist, doneButton, pickCard1, pickCard2, pickCard3, pickCard4, pickCard5));
+		pickCard1.setOnAction(e -> pickCardEvent(pickCard1, 1, arrlist, undoButton, buttonsPressed, savedStates, reset));
+		pickCard2.setOnAction(e -> pickCardEvent(pickCard2, 2, arrlist, undoButton, buttonsPressed, savedStates, reset));
+		pickCard3.setOnAction(e -> pickCardEvent(pickCard3, 3, arrlist, undoButton, buttonsPressed, savedStates, reset));
+		pickCard4.setOnAction(e -> pickCardEvent(pickCard4, 4, arrlist, undoButton, buttonsPressed, savedStates, reset));
+		pickCard5.setOnAction(e -> pickCardEvent(pickCard5, 5, arrlist, undoButton, buttonsPressed, savedStates, reset));
+		doneButton.setOnAction(e -> finishedCardPick(arrlist, doneButton, pickCard1, pickCard2, pickCard3, pickCard4, pickCard5, undoButton));
+		undoButton.setOnAction(e -> reset.restoreFromMemento(savedStates.get(0), pickButtons, arrlist));
 		
 		pane.add(doneButton, 0, 0);
 		pane.add(pickCard1, 0, 1);
@@ -636,6 +870,7 @@ public class fiveCard {
 		pane.add(pickCard3, 0, 3);
 		pane.add(pickCard4, 0, 4);
 		pane.add(pickCard5, 0, 5);
+		pane.add(undoButton, 0, 6);
 		
 		prompt.setText(prompt.getText() + "\nDealer will now allow you to swap cards.");
 		prompt.setText(prompt.getText() + "\nPick which cards you'd like to replace.");
@@ -652,7 +887,7 @@ public class fiveCard {
 				betButton.setDisable(true);
 				callButton.setDisable(true);
 				checkButton.setDisable(true);
-				foldButton.setDisable(true);
+				//foldButton.setDisable(true);
 				prompt.setText(prompt.getText() + "\nYou Win!");
 				variables.setPrompt(prompt);
 				money = variables.getMoney();
@@ -660,6 +895,8 @@ public class fiveCard {
 				money += potMoney;
 				potLabel.setText("Pot:\n$0");
 				yourMoney.setText("Money = $" + money);
+				foldButton.setDisable(false);
+				foldButton.setText("Back");
 			}
 			else
 			{
@@ -829,18 +1066,31 @@ public class fiveCard {
 		}
 		else if (shouldCheck == true)
 		{
-			prompt.setText(prompt.getText() + "\nPlayer checks.");
+			//prompt.setText(prompt.getText() + "\nPlayer checks.");
+			Check check = new Check();
+			prompt.setText(prompt.getText() + check.setCheck());
 		}
 		else if (shouldCall == true && playerMoney >= playerDebt)
 		{
-			prompt.setText(prompt.getText() + "\nPlayer calls.");
-			playerMoney = playerMoney - playerDebt;
-			playerDebt = 0;
-			playerLabel.setText("Money = $" + playerMoney);
-			potMoney = variables.getPotMoney();
-			potMoney = potMoney + lastBetFigure;
-			variables.setPotMoney(potMoney);
-			potLabel.setText("Pot:\n$" + potMoney);
+			if (lastBetFigure == 0)
+			{
+				Check check = new Check();
+				CallEvent checkAdapter = new CheckAdapter(check);
+				prompt.setText(prompt.getText() + checkAdapter.setCall());
+			}
+			else
+			{
+				//prompt.setText(prompt.getText() + "\nPlayer calls.");
+				Call call = new Call();
+				prompt.setText(prompt.getText() + call.setCall());
+				playerMoney = playerMoney - playerDebt;
+				playerDebt = 0;
+				playerLabel.setText("Money = $" + playerMoney);
+				potMoney = variables.getPotMoney();
+				potMoney = potMoney + lastBetFigure;
+				variables.setPotMoney(potMoney);
+				potLabel.setText("Pot:\n$" + potMoney);
+			}
 		}
 		else if (shouldFold == true && random < 6)
 		{
