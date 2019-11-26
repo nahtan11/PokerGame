@@ -1,0 +1,208 @@
+@startuml
+
+title __GAME's Class Diagram__\n
+
+  namespace output.Game {
+    class output.Game.EventContextObj {
+        + currentDateTime : LocalDateTime
+        + gameName : String
+        + user : String
+        + EventContextObj()
+        + getCurrentDateTime()
+        + getGameName()
+        + getUser()
+    }
+  }
+  
+
+  namespace output.Game {
+    class output.Game.EventLoggingDispatcher {
+        ~ interceptors : ArrayList<IEventInterceptor>
+        + addEventLogInterceptors()
+        + postEvent()
+        + preEvent()
+    }
+  }
+  
+
+  namespace output.Game {
+    class output.Game.GameEventInterceptor {
+        + postEvent()
+        + preEvent()
+    }
+  }
+  
+
+  namespace output.Game {
+    interface output.Game.IEventInterceptor {
+        {abstract} + postEvent()
+        {abstract} + preEvent()
+    }
+  }
+  
+
+  namespace output.Game {
+    class output.Game.deckThings {
+        {static} + checkHand()
+        {static} + hand()
+        {static} + makeDeck()
+    }
+  }
+  
+
+  namespace output.Game {
+    class output.Game.fiveCard {
+        {static} ~ betButton : Button
+        {static} ~ betting : boolean
+        {static} ~ callButton : Button
+        {static} ~ card1 : Label
+        {static} ~ card2 : Label
+        {static} ~ card3 : Label
+        {static} ~ card4 : Label
+        {static} ~ card5 : Label
+        {static} ~ checkButton : Button
+        {static} ~ content : VBox
+        {static} ~ deck : ArrayList<String>
+        {static} ~ foldButton : Button
+        {static} ~ howManyCards : int
+        {static} ~ lastBet : String
+        {static} ~ lastBetFigure : int
+        {static} ~ loopedOnce : boolean
+        {static} ~ money : int
+        {static} ~ pane : GridPane
+        {static} ~ player2 : Label
+        {static} ~ player2Debt : int
+        {static} ~ player2Fold : boolean
+        {static} ~ player2Hand : String[]
+        {static} ~ player2Has : String
+        {static} ~ player2Money : int
+        {static} ~ player2MoneyLabel : Label
+        {static} ~ player2Remove : String[]
+        {static} ~ player3 : Label
+        {static} ~ player3Debt : int
+        {static} ~ player3Fold : boolean
+        {static} ~ player3Hand : String[]
+        {static} ~ player3Has : String
+        {static} ~ player3Money : int
+        {static} ~ player3MoneyLabel : Label
+        {static} ~ player3Remove : String[]
+        {static} ~ player4 : Label
+        {static} ~ player4Debt : int
+        {static} ~ player4Fold : boolean
+        {static} ~ player4Hand : String[]
+        {static} ~ player4Has : String
+        {static} ~ player4Money : int
+        {static} ~ player4MoneyLabel : Label
+        {static} ~ player4Remove : String[]
+        {static} ~ potLabel : Label
+        {static} ~ potMoney : int
+        {static} ~ prompt : Label
+        {static} ~ raiseButton : Button
+        ~ scene1 : Scene
+        {static} ~ sp : ScrollPane
+        {static} ~ swappedCards : boolean
+        {static} ~ textField : TextField
+        {static} ~ whosTurn : int
+        {static} ~ youFold : boolean
+        {static} ~ youHave : String
+        {static} ~ youHaveLabel : Label
+        {static} ~ yourDebt : int
+        {static} ~ yourHand : String[]
+        {static} ~ yourMoney : Label
+        + PlayGame()
+        {static} + cardSwap()
+        {static} + checkForDeal()
+        {static} + deal()
+        {static} + endGame()
+        {static} + finishedCardPick()
+        {static} + formatHand()
+        {static} + getPrompt()
+        {static} + opponentBets()
+        {static} + opponentGoes()
+        {static} + pickCardEvent()
+        {static} + scrollToBottom()
+        {static} + unFormatHand()
+    }
+  }
+  
+
+  namespace output.Game {
+    class output.Game.playerDecisions {
+        {static} ~ betButton : Button
+        {static} ~ callButton : Button
+        {static} ~ checkButton : Button
+        {static} ~ foldButton : Button
+        {static} ~ lastBet : String
+        {static} ~ money : int
+        {static} ~ potLabel : Label
+        {static} ~ potMoney : int
+        {static} ~ prompt : Label
+        {static} ~ raiseButton : Button
+        {static} ~ textField : TextField
+        {static} ~ yourBetInteger : int
+        {static} ~ yourDebt : int
+        {static} ~ yourMoney : Label
+        {static} + betEvent()
+        {static} + callEvent()
+        {static} + checkEvent()
+        {static} + createTextField()
+        {static} + getYourBetInteger()
+        {static} + setYourBetInteger()
+    }
+  }
+  
+
+  namespace output.Game {
+    class output.Game.variables {
+        {static} ~ betButton : Button
+        {static} ~ callButton : Button
+        {static} ~ checkButton : Button
+        {static} ~ foldButton : Button
+        {static} ~ lastBet : String
+        {static} ~ money : int
+        {static} ~ potLabel : Label
+        {static} ~ potMoney : int
+        {static} ~ prompt : Label
+        {static} ~ raiseButton : Button
+        {static} ~ yourDebt : int
+        {static} ~ yourMoney : Label
+        {static} + getBetButton()
+        {static} + getCallButton()
+        {static} + getCheckButton()
+        {static} + getFoldButton()
+        {static} + getLastBet()
+        {static} + getMoney()
+        {static} + getPotLabel()
+        {static} + getPotMoney()
+        {static} + getPrompt()
+        {static} + getRaiseButton()
+        {static} + getYourDebt()
+        {static} + getYourMoney()
+        {static} + setBetButton()
+        {static} + setCallButton()
+        {static} + setCheckButton()
+        {static} + setFoldButton()
+        {static} + setLastBet()
+        {static} + setMoney()
+        {static} + setPotLabel()
+        {static} + setPotMoney()
+        {static} + setPrompt()
+        {static} + setRaiseButton()
+        {static} + setYourDebt()
+        {static} + setYourMoney()
+    }
+  }
+  
+
+  output.Game.EventLoggingDispatcher .up.|> output.Game.IEventInterceptor
+  output.Game.GameEventInterceptor .up.|> output.Game.IEventInterceptor
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

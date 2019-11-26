@@ -152,6 +152,7 @@ public class Main extends Application {
         layout1.getChildren().addAll(image,button1,button2,login,register,button3);
         BorderPane back = new BorderPane();
         back.setCenter(layout1);
+
         scene1= new Scene(back, 400, 500);
 
         //Game Selection Menu
@@ -162,8 +163,11 @@ public class Main extends Application {
         Button button6= new Button("Back");
         button6.setOnAction(e -> primaryStage.setScene(scene1));
         VBox layout2= new VBox(20);
+        layout2.setAlignment(Pos.CENTER);
+        BorderPane back2 = new BorderPane();
+        back2.setCenter(layout2);
         layout2.getChildren().addAll(button4,button5,button6);
-        scene2= new Scene(layout2,400,500);
+        scene2= new Scene(back2,400,500);
 
         //Single-player Menu
         //Label label2= new Label("This is the second scene");
@@ -172,8 +176,11 @@ public class Main extends Application {
         Button button9= new Button("Back");
         button9.setOnAction(e -> primaryStage.setScene(scene2));
         VBox layout3= new VBox(20);
+        layout3.setAlignment(Pos.CENTER);
+        BorderPane back3 = new BorderPane();
+        back3.setCenter(layout3);
         layout3.getChildren().addAll(button7,button8,button9);
-        scene4= new Scene(layout3,400,500);
+        scene4= new Scene(back3,400,500);
 
         //Multi-player Menu
         //Label label2= new Label("This is the second scene");
@@ -182,8 +189,11 @@ public class Main extends Application {
         Button button12= new Button("Back");
         button12.setOnAction(e -> primaryStage.setScene(scene2));
         VBox layout4= new VBox(20);
+        layout4.setAlignment(Pos.CENTER);
+        BorderPane back4 = new BorderPane();
+        back4.setCenter(layout4);
         layout4.getChildren().addAll(button10,button11,button12);
-        scene5= new Scene(layout4,400,500);
+        scene5= new Scene(back4,400,500);
 
 
         HBox lbHeadings = new HBox(20);
